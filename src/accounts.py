@@ -1,9 +1,12 @@
+import random
+import time
 from typing import Union
 
 
 class Account:
     def __init__(self, id: int, first_name: str, last_name: str, rate: Union[float, None] = None):
-        self.id = id
+        random.seed(time.time())
+        self.id = random.randrange(1000000000, 99999999999999999)
         self.first_name = first_name
         self.last_name = last_name
         self.rate = rate
@@ -61,14 +64,18 @@ class Account:
             raise ValueError("Rate is not set")
 
         self.unpaid_income = self.unpaid_hours * self.rate
-        self.paid_income = self.paid_hours * self.rate
         return {"unpaid_income": self.unpaid_income, "paid_income": self.paid_income}
 
     def pay(self, hours: float = 0) -> dict:
-        self.paid_hours += hours if hours > 0 else self.unpaid_hours
-        self.unpaid_hours = self.unpaid_hours - hours if hours > 0 else 0
+        hours = hours if hours > 0 else self.unpaid_hours
+        self.paid_hours += hours
+        self.unpaid_hours = self.unpaid_hours - hours
 
-        self.get_income()
+        if self.rate is None:
+            raise ValueError("Rate is not set")
+
+        self.paid_income += hours * self.rate
+        self.unpaid_income = self.unpaid_hours * self.rate
 
         return {
             "unpaid_hours": self.unpaid_hours,
