@@ -61,13 +61,15 @@ class Account:
             raise ValueError("Rate is not set")
 
         self.unpaid_income = self.unpaid_hours * self.rate
+        self.paid_income = self.paid_hours * self.rate
         return {"unpaid_income": self.unpaid_income, "paid_income": self.paid_income}
 
-    def pay(self) -> dict:
-        self.paid_hours += self.unpaid_hours
-        self.paid_income += self.get_income()["unpaid_income"]
-        self.unpaid_hours = 0
-        self.unpaid_income = 0
+    def pay(self, hours: float = 0) -> dict:
+        self.paid_hours += hours if hours > 0 else self.unpaid_hours
+        self.unpaid_hours = self.unpaid_hours - hours if hours > 0 else 0
+
+        self.get_income()
+
         return {
             "unpaid_hours": self.unpaid_hours,
             "paid_hours": self.paid_hours,
