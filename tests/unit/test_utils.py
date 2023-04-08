@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 import src.utils as utils
@@ -323,5 +324,229 @@ def test_create_all_x_income_dicts_for_multiple_rate(
         utils.create_all_x_income_dicts_for_multiple_rates(
             daily_rates, daily_hours, leave_days, 2021
         )
+        == expected
+    )
+
+
+@pytest.mark.parametrize(
+    "base_rate, period, rates, daily_hours, leave_days, expected",
+    [
+        (
+            30,
+            "weekdays",
+            np.arange(31, 34),
+            8,
+            5,
+            {
+                30: {
+                    "daily_income": 0.0,
+                    "daily_tax": 0.0,
+                    "daily_take_home": 0.0,
+                    "daily_super": 0.0,
+                    "daily_take_home_plus_super": 0.0,
+                    "daily_income_plus_super": 0.0,
+                    "rate": 0.0,
+                    "hours": 0.0,
+                },
+                31: {
+                    "daily_income": 8.0,
+                    "daily_tax": 2.6000000000000014,
+                    "daily_take_home": 5.400000000000006,
+                    "daily_super": 0.8399999999999999,
+                    "daily_take_home_plus_super": 6.240000000000009,
+                    "daily_income_plus_super": 8.840000000000032,
+                    "rate": 1.0,
+                    "hours": 0.0,
+                },
+                32: {
+                    "daily_income": 16.0,
+                    "daily_tax": 5.200000000000003,
+                    "daily_take_home": 10.800000000000011,
+                    "daily_super": 1.6799999999999997,
+                    "daily_take_home_plus_super": 12.480000000000018,
+                    "daily_income_plus_super": 17.680000000000007,
+                    "rate": 2.0,
+                    "hours": 0.0,
+                },
+                33: {
+                    "daily_income": 24.0,
+                    "daily_tax": 7.799999999999997,
+                    "daily_take_home": 16.19999999999999,
+                    "daily_super": 2.5199999999999996,
+                    "daily_take_home_plus_super": 18.72,
+                    "daily_income_plus_super": 26.52000000000004,
+                    "rate": 3.0,
+                    "hours": 0.0,
+                },
+            },
+        ),
+        (
+            100,
+            "weeks",
+            np.arange(100, 111, 5),
+            8,
+            20,
+            {
+                100: {
+                    "weekly_income": 0.0,
+                    "weekly_tax": 0.0,
+                    "weekly_take_home": 0.0,
+                    "weekly_super": 0.0,
+                    "weekly_take_home_plus_super": 0.0,
+                    "weekly_income_plus_super": 0.0,
+                    "rate": 0.0,
+                    "hours": 0.0,
+                },
+                105: {
+                    "weekly_income": 200.83333333333348,
+                    "weekly_tax": 90.375,
+                    "weekly_take_home": 110.45833333333303,
+                    "weekly_super": 21.087500000000034,
+                    "weekly_take_home_plus_super": 131.54583333333358,
+                    "weekly_income_plus_super": 221.92083333333358,
+                    "rate": 5.0,
+                    "hours": 0.0,
+                },
+                110: {
+                    "weekly_income": 401.6666666666665,
+                    "weekly_tax": 180.75,
+                    "weekly_take_home": 220.91666666666652,
+                    "weekly_super": 42.174999999999955,
+                    "weekly_take_home_plus_super": 263.09166666666624,
+                    "weekly_income_plus_super": 443.84166666666624,
+                    "rate": 10.0,
+                    "hours": 0.0,
+                },
+            },
+        ),
+        (
+            75,
+            "biweeks",
+            np.arange(80, 91, 5),
+            8,
+            20,
+            {
+                75: {
+                    "biweekly_income": 0.0,
+                    "biweekly_tax": 0.0,
+                    "biweekly_take_home": 0.0,
+                    "biweekly_super": 0.0,
+                    "biweekly_take_home_plus_super": 0.0,
+                    "biweekly_income_plus_super": 0.0,
+                    "rate": 0.0,
+                    "hours": 0.0,
+                },
+                80: {
+                    "biweekly_income": 401.66666666666697,
+                    "biweekly_tax": 148.6166666666668,
+                    "biweekly_take_home": 253.05000000000018,
+                    "biweekly_super": 42.174999999999955,
+                    "biweekly_take_home_plus_super": 295.22500000000036,
+                    "biweekly_income_plus_super": 443.84166666666715,
+                    "rate": 5.0,
+                    "hours": 0.0,
+                },
+                85: {
+                    "biweekly_income": 803.333333333333,
+                    "biweekly_tax": 297.2333333333331,
+                    "biweekly_take_home": 506.10000000000036,
+                    "biweekly_super": 84.34999999999991,
+                    "biweekly_take_home_plus_super": 590.4499999999998,
+                    "biweekly_income_plus_super": 887.6833333333334,
+                    "rate": 10.0,
+                    "hours": 0.0,
+                },
+                90: {
+                    "biweekly_income": 1205.0,
+                    "biweekly_tax": 445.85000000000014,
+                    "biweekly_take_home": 759.1500000000005,
+                    "biweekly_super": 126.52499999999998,
+                    "biweekly_take_home_plus_super": 885.6750000000011,
+                    "biweekly_income_plus_super": 1331.5250000000005,
+                    "rate": 15.0,
+                    "hours": 0.0,
+                },
+            },
+        ),
+        (
+            43.56,
+            "months",
+            np.arange(31, 32),
+            8,
+            18,
+            {
+                31: {
+                    "monthly_income": -2219.694545454545,
+                    "monthly_tax": -721.4007272727271,
+                    "monthly_take_home": -1498.293818181819,
+                    "monthly_super": -233.06792727272727,
+                    "monthly_take_home_plus_super": -1731.3617454545456,
+                    "monthly_income_plus_super": -2452.7624727272732,
+                    "rate": -12.560000000000002,
+                    "hours": 0.0,
+                },
+                43: {
+                    "monthly_income": -98.96727272727276,
+                    "monthly_tax": -32.164363636363305,
+                    "monthly_take_home": -66.80290909090854,
+                    "monthly_super": -10.391563636363571,
+                    "monthly_take_home_plus_super": -77.19447272727211,
+                    "monthly_income_plus_super": -109.35883636363724,
+                    "rate": -0.5600000000000023,
+                    "hours": 0.0,
+                },
+            },
+        ),
+        (
+            27.89,
+            "year",
+            np.arange(25, 31, 2),
+            8,
+            0,
+            {
+                25: {
+                    "yearly_income": -6034.32,
+                    "yearly_tax": -1961.1540000000005,
+                    "yearly_take_home": -4073.1659999999974,
+                    "yearly_super": -633.6035999999995,
+                    "yearly_take_home_plus_super": -4706.7696,
+                    "yearly_income_plus_super": -6667.923600000002,
+                    "rate": -2.8900000000000006,
+                    "hours": 0,
+                },
+                27: {
+                    "yearly_income": -1858.3199999999997,
+                    "yearly_tax": -603.9539999999997,
+                    "yearly_take_home": -1254.3659999999945,
+                    "yearly_super": -195.1235999999999,
+                    "yearly_take_home_plus_super": -1449.4896000000008,
+                    "yearly_income_plus_super": -2053.443600000006,
+                    "rate": -0.8900000000000006,
+                    "hours": 0,
+                },
+                29: {
+                    "yearly_income": 2317.6800000000003,
+                    "yearly_tax": 753.246000000001,
+                    "yearly_take_home": 1564.434000000001,
+                    "yearly_super": 243.35640000000058,
+                    "yearly_take_home_plus_super": 1807.790399999998,
+                    "yearly_income_plus_super": 2561.0364000000045,
+                    "rate": 1.1099999999999994,
+                    "hours": 0,
+                },
+            },
+        ),
+    ],
+)
+def test_compare_rates_to_base_rate(
+    base_rate: float,
+    period: str,
+    rates: np.arange,
+    daily_hours: float,
+    leave_days: int,
+    expected: dict,
+) -> None:
+    assert (
+        utils.compare_rates_to_base_rate(base_rate, period, rates, daily_hours, leave_days, 2021)
         == expected
     )
