@@ -1,3 +1,36 @@
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 100
+float_to_top = true
+skip_gitignore = true
+extend_skip_glob = ["ignore/*", ".build/*"]
+
+[tool.mypy]
+disallow_untyped_defs = true
+namespace_packages = true
+explicit_package_bases = true
+plugins = "pydantic.mypy"
+
+[tool.pytest.ini_options]
+testpaths = [
+	"tests/unit",
+]
+addopts = "-vvx"
+
+[tool.pyright]
+exclude = [
+	"**/node_modules",
+	"**/__pycache__",
+	".git",
+	"**/cdk.out",
+	"**/.build",
+	"ignore",
+	"lambda_layers",
+]
+
 [tool.poetry]
 name = "finances"
 version = "0.1.0"
@@ -12,7 +45,14 @@ pandas = "^2.0.0"
 numpy = "^1.24.2"
 pytest = "^7.2.2"
 pre-commit = "^3.2.2"
+autoflake = "^2.0.2"
+isort = "^5.12.0"
+black = "^23.3.0"
+mypy = "^1.2.0"
 
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core"]
