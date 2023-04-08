@@ -58,3 +58,62 @@ def test_get_number_of_weekdays_minus_leave(leave_days: int, expected: int) -> N
         )
         == expected
     )
+
+
+@pytest.mark.parametrize(
+    "daily_rate, daily_hours, leave_days, expected",
+    [
+        (
+            100,
+            8,
+            0,
+            {
+                "yearly_income": 208800,
+                "yearly_tax": 64627.0,
+                "yearly_take_home": 144173.0,
+                "yearly_super": 21924.0,
+                "yearly_take_home_plus_super": 166097.0,
+                "yearly_income_plus_super": 230724.0,
+                "rate": 100,
+                "hours": 8,
+            },
+        ),
+        (
+            42,
+            8,
+            0,
+            {
+                "yearly_income": 87696,
+                "yearly_tax": 18968.2,
+                "yearly_take_home": 68727.8,
+                "yearly_super": 9208.08,
+                "yearly_take_home_plus_super": 77935.88,
+                "yearly_income_plus_super": 96904.08,
+                "rate": 42,
+                "hours": 8,
+            },
+        ),
+        (
+            75.69,
+            11.43,
+            20,
+            {
+                "yearly_income": 208497.94469999996,
+                "yearly_tax": 64491.075114999985,
+                "yearly_take_home": 144006.86958499998,
+                "yearly_super": 21892.284193499996,
+                "yearly_take_home_plus_super": 165899.15377849998,
+                "yearly_income_plus_super": 230390.22889349997,
+                "rate": 75.69,
+                "hours": 11.43,
+            },
+        ),
+    ],
+)
+def test_create_yearly_income_dict(
+    daily_rate: float, daily_hours: float, leave_days: int, expected: dict
+) -> None:
+    assert (
+        utils.create_yearly_income_dict(daily_rate, daily_hours, leave_days, 2021)
+        == expected
+    )
