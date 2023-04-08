@@ -24,70 +24,41 @@ def get_number_of_weekdays(start_date: str, end_date: str) -> int:
     return len(weekdays)
 
 
-def get_number_of_weekdays_minus_leave(
-    start_date: str, end_date: str, leave_days: int
-) -> int:
+def get_number_of_weekdays_minus_leave(start_date: str, end_date: str, leave_days: int) -> int:
     return get_number_of_weekdays(start_date, end_date) - leave_days
 
 
-def get_number_of_hours_in_year_minus_leave(
-    year: int, leave_days: int = 0
-) -> int:
-    return (
-        get_number_of_weekdays_minus_leave(
-            f"{year}-01-01", f"{year}-12-31", leave_days
-        )
-        * 8
-    )
+def get_number_of_hours_in_year_minus_leave(year: int, leave_days: int = 0) -> int:
+    return get_number_of_weekdays_minus_leave(f"{year}-01-01", f"{year}-12-31", leave_days) * 8
 
 
-def get_number_of_weekdays_in_year_minus_leave(
-    year: int, leave_days: int = 0
-) -> int:
-    return (
-        get_number_of_weekdays(f"{year}-01-01", f"{year}-12-31") - leave_days
-    )
+def get_number_of_weekdays_in_year_minus_leave(year: int, leave_days: int = 0) -> int:
+    return get_number_of_weekdays(f"{year}-01-01", f"{year}-12-31") - leave_days
 
 
-def get_number_of_weeks_in_year_minus_leave(
-    year: int, leave_days: int = 0
-) -> float:
-    return round(
-        get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 5, 0
-    )
+def get_number_of_weeks_in_year_minus_leave(year: int, leave_days: int = 0) -> float:
+    return round(get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 5, 0)
 
 
-def get_number_of_biweeks_in_year_minus_leave(
-    year: int, leave_days: int = 0
-) -> float:
-    return round(
-        get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 10, 0
-    )
+def get_number_of_biweeks_in_year_minus_leave(year: int, leave_days: int = 0) -> float:
+    return round(get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 10, 0)
 
 
-def get_number_of_months_in_year_minus_leave(
-    year: int, leave_days: int = 0
-) -> float:
-    return round(
-        get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 22, 0
-    )
+def get_number_of_months_in_year_minus_leave(year: int, leave_days: int = 0) -> float:
+    return round(get_number_of_weekdays_in_year_minus_leave(year, leave_days) / 22, 0)
 
 
 # Convert daily income to yearly income
 def get_yearly_income_using_daily_income(
     daily_income: float, leave_days: int, this_year: pd.Timestamp
 ) -> float:
-    return daily_income * get_number_of_weekdays_in_year_minus_leave(
-        this_year, leave_days
-    )
+    return daily_income * get_number_of_weekdays_in_year_minus_leave(this_year, leave_days)
 
 
 def divide_dict_by_x(dictionary: dict, x: float) -> dict:
     dictionary = {k: float(v) for k, v in dictionary.items()}
     return {
-        k: v / x
-        if isinstance(v, float) and k != "rate" and k != "hours"
-        else v
+        k: v / x if isinstance(v, float) and k != "rate" and k != "hours" else v
         for k, v in dictionary.items()
     }
 
@@ -147,18 +118,14 @@ def create_x_income_dict(
     x: str,
     this_year: pd.Timestamp = pd.to_datetime("today").year,
 ) -> dict:
-    income_dict = create_yearly_income_dict(
-        daily_rate, daily_hours, leave_days, this_year
-    )
+    income_dict = create_yearly_income_dict(daily_rate, daily_hours, leave_days, this_year)
 
     if x == "year":
         return income_dict
     return change_dict_keys_to_new_string(
         divide_dict_by_x(
             income_dict,
-            eval(
-                f"get_number_of_{x}_in_year_minus_leave(this_year, leave_days)"
-            ),
+            eval(f"get_number_of_{x}_in_year_minus_leave(this_year, leave_days)"),
         ),
         x_to_name(x),
     )
@@ -171,9 +138,7 @@ def create_all_x_income_dicts(
     this_year: pd.Timestamp = pd.to_datetime("today").year,
 ) -> dict:
     return {
-        x: create_x_income_dict(
-            daily_rate, daily_hours, leave_days, x, this_year
-        )
+        x: create_x_income_dict(daily_rate, daily_hours, leave_days, x, this_year)
         for x in ["year", "months", "biweeks", "weeks", "weekdays", "hours"]
     }
 
@@ -185,9 +150,7 @@ def create_all_x_income_dicts_for_multiple_rates(
     this_year: pd.Timestamp = pd.to_datetime("today").year,
 ) -> dict:
     return {
-        f"{daily_rate}": create_all_x_income_dicts(
-            daily_rate, daily_hours, leave_days, this_year
-        )
+        f"{daily_rate}": create_all_x_income_dicts(daily_rate, daily_hours, leave_days, this_year)
         for daily_rate in daily_rates
     }
 
@@ -211,9 +174,7 @@ def process_rate(
     period: str,
     base_rate_dict: dict,
 ) -> tuple:
-    rate_dict = create_all_x_income_dicts(
-        rate, daily_hours, leave_days, this_year
-    )[period]
+    rate_dict = create_all_x_income_dicts(rate, daily_hours, leave_days, this_year)[period]
     return (rate, operate_dicts(rate_dict, base_rate_dict, "-"))
 
 
@@ -226,9 +187,9 @@ def compare_rates_to_base_rate(
     leave_days: int,
     this_year: pd.Timestamp = pd.to_datetime("today").year,
 ) -> dict:
-    base_rate_dict = create_all_x_income_dicts(
-        base_rate, daily_hours, leave_days, this_year
-    )[period]
+    base_rate_dict = create_all_x_income_dicts(base_rate, daily_hours, leave_days, this_year)[
+        period
+    ]
     rates = sorted(np.insert(rates, 0, base_rate))
     compare_dict = {}
 
