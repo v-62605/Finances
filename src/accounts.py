@@ -11,6 +11,7 @@ class Account:
         self.unpaid_income: float = 0
         self.paid_hours: float = 0
         self.paid_income: float = 0
+        self.average_pay_rate: float = 0
 
     def __repr__(self) -> str:
         return f"Account({self.id}, {self.first_name}, {self.last_name})"
