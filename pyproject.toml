@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "finances"
+version = "0.1.0"
+description = ""
+authors = ["Vikesh Varsani <vikon1998@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+matplotlib = "^3.7.1"
+pandas = "^2.0.0"
+numpy = "^1.24.2"
+pytest = "^7.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
