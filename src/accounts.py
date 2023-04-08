@@ -6,7 +6,7 @@ from typing import Union
 class Account:
     def __init__(self, id: int, first_name: str, last_name: str, rate: Union[float, None] = None):
         random.seed(time.time())
-        self.id = random.randrange(1000000000, 99999999999999999)
+        self.id = random.randrange(1000000000, 99999999999999999) if id is None else id
         self.first_name = first_name
         self.last_name = last_name
         self.rate = rate
