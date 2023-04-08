@@ -25,3 +25,18 @@ import src.utils as utils
 )
 def test_calculate_tax(income: float, expected: float) -> None:
     assert utils.calculate_tax(income) == expected
+
+
+@pytest.mark.parametrize(
+    "start_date, end_date, expected",
+    [
+        ("2020-01-01", "2020-01-31", 23),
+        ("2020-01-01", "2020-02-29", 43),
+        ("2020-01-01", "2020-03-31", 65),
+        ("2045-01-01", "2045-04-30", 85),
+        ("2045-01-01", "2045-05-31", 108),
+        ("2045-01-01", "2100-06-30", 14478),
+    ],
+)
+def test_get_number_of_weekdays(start_date: str, end_date: str, expected: int) -> None:
+    assert utils.get_number_of_weekdays(start_date, end_date) == expected
