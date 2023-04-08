@@ -40,3 +40,21 @@ def test_calculate_tax(income: float, expected: float) -> None:
 )
 def test_get_number_of_weekdays(start_date: str, end_date: str, expected: int) -> None:
     assert utils.get_number_of_weekdays(start_date, end_date) == expected
+
+
+@pytest.mark.parametrize(
+    "leave_days,expected",
+    [
+        (0, 262),
+        (10, 252),
+        (7, 255),
+        (57, 205),
+    ],
+)
+def test_get_number_of_weekdays_minus_leave(leave_days: int, expected: int) -> None:
+    assert (
+        utils.get_number_of_weekdays_minus_leave(
+            start_date="2020-01-01", end_date="2020-12-31", leave_days=leave_days
+        )
+        == expected
+    )
