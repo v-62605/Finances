@@ -1,5 +1,6 @@
 import concurrent.futures
 import datetime
+import os
 import random
 import time
 
@@ -18,7 +19,7 @@ class Account:
         self.paid_hours: float = 0
         self.paid_income: float = 0
         self.average_pay_rate: float = 0
-        self.pay_raise: list = [(self.rate, datetime.datetime.now().astimezone())]
+        self.pay_raise: list = [[self.rate, str(datetime.datetime.now().astimezone())]]
 
     def __repr__(self) -> str:
         return f"Account({self.id}, {self.first_name}, {self.last_name}, {self.rate})"
@@ -43,12 +44,13 @@ class Account:
             "paid_hours": self.paid_hours,
             "paid_income": self.paid_income,
             "pay_raise": self.pay_raise,
+            "average_pay_rate": self.average_rate()["average_rate"],
         }
 
     def update_rate(self, rate: float) -> dict:
         self.rate = rate
 
-        self.pay_raise.append((self.rate, datetime.datetime.now().astimezone()))
+        self.pay_raise.append([self.rate, str(datetime.datetime.now().astimezone())])
 
         return {"rate": self.rate}
 
@@ -97,7 +99,11 @@ class Account:
         }
 
     def save(self) -> None:
-        pass
+        if not os.path.exists("data"):
+            os.makedirs("data")
+
+        with open(f"data/{self.id}.json", "w") as f:
+            f.write(str(self.get_info()))
 
 
 def generate_accounts(n: int) -> list:
