@@ -3,23 +3,26 @@ import datetime
 import os
 import random
 import time
+from typing import Any
 
 import names
 
 
 class Account:
-    def __init__(self, id: int, first_name: str, last_name: str, rate: float):
+    def __init__(self, id: int, first_name: str, last_name: str, rate: float, **kwargs: Any):
         random.seed(time.time())
         self.id = random.randrange(1_000_000_000, 99999999999999999) if id <= 1_000_000_000 else id
         self.first_name = first_name
         self.last_name = last_name
         self.rate = rate if rate is not None else None
-        self.unpaid_hours: float = 0
-        self.unpaid_income: float = 0
-        self.paid_hours: float = 0
-        self.paid_income: float = 0
-        self.average_pay_rate: float = 0
-        self.pay_raise: list = [[self.rate, str(datetime.datetime.now().astimezone())]]
+        self.unpaid_hours: float = kwargs.get("unpaid_hours", 0)
+        self.unpaid_income: float = kwargs.get("unpaid_income", 0)
+        self.paid_hours: float = kwargs.get("paid_hours", 0)
+        self.paid_income: float = kwargs.get("paid_income", 0)
+        self.average_pay_rate: float = kwargs.get("average_pay_rate", 0)
+        self.pay_raise: list = kwargs.get(
+            "pay_raise", [[self.rate, str(datetime.datetime.now().astimezone())]]
+        )
 
     def __repr__(self) -> str:
         return f"Account({self.id}, {self.first_name}, {self.last_name}, {self.rate})"
