@@ -1,3 +1,4 @@
+import concurrent.futures
 import datetime
 import random
 import time
@@ -120,12 +121,32 @@ def generate_daily_events_for_an_account(account: Account) -> Account:
     # Add hours for the day
     account.add_hours(round(random.uniform(8, 10), 2))
 
-    # Get a raise with probability 0.05
-    if random.random() < 0.01:
-        account.update_rate(round(account.rate * (1 + random.uniform(0, 0.25)), 2))
+    # Get a raise with probability 0.0035, (1-p)^261 = 0.4 -> p = 0.0035
+    if random.random() < 0.0035:
+        account.update_rate(round(account.rate * (1 + random.uniform(0, 0.05)), 2))
 
     # Pay when the account has more than 40 hours
     if account.unpaid_hours >= 40:
         account.pay()
 
     return account
+
+
+def generate_n_days_events_for_an_account(account: Account, n: int) -> Account:
+    """Generate n days events for an account"""
+
+    for i in range(n):
+        account = generate_daily_events_for_an_account(account)
+
+    return account
+
+
+def generate_n_days_events_for_accounts(accounts: list, n: int) -> list:
+    """Generate n days events for accounts"""
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        accounts_events = executor.map(
+            generate_n_days_events_for_an_account, accounts, [n] * len(accounts)
+        )
+
+    return list(accounts_events)
