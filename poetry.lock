@@ -864,6 +864,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "names"
+version = "0.3.0"
+description = "Generate random names"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "nbclassic"
 version = "0.5.5"
 description = "Jupyter Notebook as a Jupyter Server extension."
@@ -1693,7 +1701,7 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "90f01b8dff5fd8b081e20632a0da986b37a4ce72c01e225555d02e09ba2e313f"
+content-hash = "fc4db754f46a65f51a21d3009986ba6ca52fc2c3b410d536de4c8bc81d249227"
 
 [metadata.files]
 anyio = [
@@ -2298,6 +2306,9 @@ mypy = [
 mypy-extensions = [
     {file = "mypy_extensions-1.0.0-py3-none-any.whl", hash = "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d"},
     {file = "mypy_extensions-1.0.0.tar.gz", hash = "sha256:75dbf8955dc00442a438fc4d0666508a9a97b6bd41aa2f0ffe9d2f2725af0782"},
+]
+names = [
+    {file = "names-0.3.0.tar.gz", hash = "sha256:726e46254f2ed03f1ffb5d941dae3bc67c35123941c29becd02d48d0caa2a671"},
 ]
 nbclassic = [
     {file = "nbclassic-0.5.5-py3-none-any.whl", hash = "sha256:47791b04dbcb89bf7fde910a3d848fd4793a4248a8936202453631a87da37d51"},
