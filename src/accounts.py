@@ -1,9 +1,10 @@
 import concurrent.futures
 import datetime
+import json
 import os
 import random
 import time
-from typing import Any
+from typing import Any, Iterator
 
 import names
 
@@ -159,3 +160,23 @@ def generate_n_days_events_for_accounts(accounts: list, n: int) -> list:
         )
 
     return list(accounts_events)
+
+
+def create_account_from_json(path: str) -> Account:
+    with open(path, "r") as f:
+        data = json.load(f)
+
+    return Account(**data)
+
+
+def create_accounts_from_data_path(path: str) -> list[Account]:
+    """Create accounts from data path"""
+
+    files = os.listdir(path)
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        accounts: Iterator[Account] = executor.map(
+            create_account_from_json, [os.path.join(path, f) for f in files]
+        )
+
+    return list(accounts)
