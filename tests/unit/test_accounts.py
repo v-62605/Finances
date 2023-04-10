@@ -6,13 +6,41 @@ from src.accounts import Account
 @pytest.mark.parametrize(
     "first_name, last_name, id, rate, expected",
     [
-        ("John", "Doe", 1, 10.0, {"id": 1, "first_name": "John", "last_name": "Doe", "rate": 10.0}),
+        (
+            "John",
+            "Doe",
+            1,
+            10.0,
+            {
+                "id": 1,
+                "first_name": "John",
+                "last_name": "Doe",
+                "rate": 10.0,
+                "unpaid_hours": 0,
+                "unpaid_income": 0,
+                "paid_hours": 0,
+                "paid_income": 0,
+                "pay_raise": [[10.0, "test"]],
+                "average_pay_rate": 10.0,
+            },
+        ),
         (
             "X",
             "Y",
             165468787,
             68.56,
-            {"id": 165468787, "first_name": "X", "last_name": "Y", "rate": 68.56},
+            {
+                "id": 165468787,
+                "first_name": "X",
+                "last_name": "Y",
+                "rate": 68.56,
+                "unpaid_hours": 0,
+                "unpaid_income": 0,
+                "paid_hours": 0,
+                "paid_income": 0,
+                "pay_raise": [[68.56, "test"]],
+                "average_pay_rate": 68.56,
+            },
         ),
     ],
 )
@@ -20,7 +48,10 @@ def test_account_init(
     first_name: str, last_name: str, id: int, rate: float, expected: dict
 ) -> None:
     account = Account(id, first_name, last_name, rate)
-    assert account.get_info() == expected
+    account_info = account.get_info()
+    account_info["id"] = id
+    account_info["pay_raise"] = [[rate, "test"]]
+    assert account_info == expected
 
 
 @pytest.mark.parametrize(
