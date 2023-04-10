@@ -7,6 +7,7 @@ import time
 from typing import Any, Iterator
 
 import names
+from cryptography.fernet import Fernet
 
 
 class Account:
@@ -63,9 +64,9 @@ class Account:
             raise ValueError("Rate is not set")
 
         if self.paid_hours == 0:
-            raise ValueError("No paid hours")
-
-        self.average_pay_rate = self.paid_income / self.paid_hours
+            self.average_pay_rate = self.rate
+        else:
+            self.average_pay_rate = self.paid_income / self.paid_hours
 
         return {"average_rate": self.average_pay_rate}
 
@@ -106,8 +107,8 @@ class Account:
         if not os.path.exists("data"):
             os.makedirs("data")
 
-        with open(f"data/{self.id}.json", "w") as f:
-            f.write(str(self.get_info()))
+        with open(f"data/{self.id}.account", "wb") as f:
+            f.write(encrypt_dict(self.get_info()))
 
 
 def generate_accounts(n: int) -> list:
@@ -180,3 +181,24 @@ def create_accounts_from_data_path(path: str) -> list[Account]:
         )
 
     return list(accounts)
+
+
+def save_account(account: Account) -> None:
+    """Save account"""
+
+    account.save()
+
+
+def apply_save_to_accounts(accounts: list[Account]) -> None:
+    """Apply save to accounts"""
+
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        executor.map(save_account, accounts)
+
+
+def encrypt_dict(data: dict) -> bytes:
+    return Fernet(os.environ["SECRET_KEY"].encode()).encrypt(json.dumps(data).encode())
+
+
+def decrypt_dict(data: bytes) -> dict:
+    return json.loads(Fernet(os.environ["SECRET_KEY"].encode()).decrypt(data.decode()))
