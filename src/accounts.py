@@ -163,9 +163,10 @@ def generate_n_days_events_for_accounts(accounts: list, n: int) -> list:
     return list(accounts_events)
 
 
-def create_account_from_json(path: str) -> Account:
+def create_account_from_bytes(path: str) -> Account:
     with open(path, "r") as f:
-        data = json.load(f)
+        data_bytes = f.read()
+        data = decrypt_dict(data_bytes.encode())
 
     return Account(**data)
 
@@ -177,7 +178,7 @@ def create_accounts_from_data_path(path: str) -> list[Account]:
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         accounts: Iterator[Account] = executor.map(
-            create_account_from_json, [os.path.join(path, f) for f in files]
+            create_account_from_bytes, [os.path.join(path, f) for f in files]
         )
 
     return list(accounts)
